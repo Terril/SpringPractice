@@ -1,9 +1,12 @@
 package com.chickenhyderabad.service
 
-import com.chickenhyderabad.model.HomeModel
+import com.chickenhyderabad.model.BannerModel
+import com.chickenhyderabad.model.CategoryModel
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.query
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service
@@ -13,20 +16,36 @@ class APIService(private val db: JdbcTemplate) {
         return "hello service"
     }
 
-    fun findModelInformation() : List<HomeModel> = db.query("select * from model") { response, _ ->
-        HomeModel(response.getString("id"), response.getString("text"))
+    fun findBannerModelInformation(): List<BannerModel> = db.query("select * from banner") { response, _ ->
+        BannerModel(
+            response.getString("id"),
+            response.getString("title"),
+            response.getString("imageUrl"),
+            response.getString("descr"),
+            response.getDate("upload"),
+            response.getDate("expiry")
+        )
     }
 
-    fun findModelById(id: String): HomeModel? = db.query("select * from model where id = ?", id) { response, _ ->
-        HomeModel(response.getString("id"), response.getString("text"))
-    }.singleOrNull()
+    fun findCategoryById(id: String): CategoryModel? =
+        db.query("select * from category where id = ?", id) { response, _ ->
+            CategoryModel(
+                response.getString("id"),
+                response.getString("title"),
+                response.getString("imageUrl"),
+                response.getString("descr"),
+                response.getArray("text")
+            )
+        }.singleOrNull()
 
-    fun save(message: HomeModel): HomeModel {
-        val id = message.id ?: UUID.randomUUID().toString()
+    fun save(banner: BannerModel): BannerModel {
+        val id = banner.banner_id ?: UUID.randomUUID().toString()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+        val current = LocalDateTime.now().format(formatter)
         db.update(
-            "insert into model values ( ?, ? )",
-            id,  message.greeting
+            "insert into banner values ( ?, ?, ?, ?, ?, ? )",
+            id, banner.bannerTitle, banner.bannerImageUrl, banner.bannerDesc, current, banner.bannerExpiryDate
         )
-        return message.copy(id = id)
+        return banner.copy(banner_id = id)
     }
 }

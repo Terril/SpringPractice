@@ -1,4 +1,4 @@
-package com.ChickenHyderabad
+package com.chickenhyderabad
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

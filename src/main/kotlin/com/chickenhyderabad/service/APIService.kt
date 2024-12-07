@@ -1,6 +1,6 @@
-package com.ChickenHyderabad.service
+package com.chickenhyderabad.service
 
-import com.ChickenHyderabad.model.Model
+import com.chickenhyderabad.model.HomeModel
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.query
 import org.springframework.stereotype.Service
@@ -13,15 +13,15 @@ class APIService(private val db: JdbcTemplate) {
         return "hello service"
     }
 
-    fun findModelInformation() : List<Model> = db.query("select * from model") { response, _ ->
-        Model(response.getString("id"), response.getString("text"))
+    fun findModelInformation() : List<HomeModel> = db.query("select * from model") { response, _ ->
+        HomeModel(response.getString("id"), response.getString("text"))
     }
 
-    fun findModelById(id: String): Model? = db.query("select * from model where id = ?", id) { response, _ ->
-        Model(response.getString("id"), response.getString("text"))
+    fun findModelById(id: String): HomeModel? = db.query("select * from model where id = ?", id) { response, _ ->
+        HomeModel(response.getString("id"), response.getString("text"))
     }.singleOrNull()
 
-    fun save(message: Model): Model {
+    fun save(message: HomeModel): HomeModel {
         val id = message.id ?: UUID.randomUUID().toString()
         db.update(
             "insert into model values ( ?, ? )",

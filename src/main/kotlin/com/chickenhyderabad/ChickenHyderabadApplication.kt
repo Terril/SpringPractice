@@ -1,12 +1,10 @@
-package com.ChickenHyderabad
+package com.chickenhyderabad
 
-import com.ChickenHyderabad.controller.APIController
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.ComponentScan
 import java.util.*
 
 
